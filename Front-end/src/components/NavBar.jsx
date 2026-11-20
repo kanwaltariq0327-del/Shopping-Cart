@@ -1,7 +1,10 @@
 import { FaCartShopping } from "react-icons/fa6";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
+  const { cartTotalQuantity } = useSelector((state) => state.cart);
+
   return (
     <nav className="nav-bar">
       <Link to={"/"}>
@@ -9,12 +12,10 @@ const Navbar = () => {
       </Link>
       <Link to={"/cart"}>
         <div className="cart">
-            <span className="cart-icon">
-                <FaCartShopping />
-            </span>
-            <span className="cart-dynamic">
-                3
-            </span>
+          <span className="cart-icon">
+            <FaCartShopping />
+          </span>
+          <span className="cart-dynamic">{cartTotalQuantity}</span>
         </div>
       </Link>
     </nav>

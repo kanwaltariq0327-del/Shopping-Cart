@@ -34,9 +34,75 @@ const cartSLice = createSlice({
       }
       localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
     },
+    removeFromCart(state, action) {
+      let nextCartItems = state.cartItems.filter(
+        (cartItem) => cartItem.id !== action.payload.id,
+      );
+      state.cartItems = nextCartItems;
+
+      toast.error(`removed ${action.payload.name} from cart`, {
+        position: "bottom-left",
+      });
+
+      localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
+    },
+    decreaseCart(state, action) {
+      const itemIndex = state.cartItems.findIndex(
+        (cartItem) => cartItem.id === action.payload.id,
+      );
+
+      if (state.cartItems[itemIndex].cartQuantity >= 1) {
+        state.cartItems[itemIndex].cartQuantity -= 1;
+
+        toast.info(`${action.payload.name} quantity decreased`, {
+          position: "bottom-left",
+        });
+      } else {
+        let nextCartItems = state.cartItems.filter(
+          (cartItem) => cartItem.id !== action.payload.id,
+        );
+        state.cartItems = nextCartItems;
+
+        toast.error(`removed ${action.payload.name} from cart`, {
+          position: "bottom-left",
+        });
+
+        localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
+      }
+    },
+    clearCart(state, action) {
+      state.cartItems = [];
+
+      toast.error(`Cart cleared`, {
+        position: "bottom-left",
+      });
+
+      localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
+    },
+    getTotals(state, action) {
+      let { total, quantity } = state.cartItems.reduce(
+        (cartTotal, cartItem) => {
+          const { price, cartQuantity } = cartItem;
+          const itemTotal = price * cartQuantity;
+
+          cartTotal.total += itemTotal;
+          cartTotal.quantity += cartQuantity;
+
+          return cartTotal;
+        },
+        {
+          total: 0,
+          quantity: 0,
+        },
+      );
+
+      state.cartTotalAmount = total;
+      state.cartTotalQuantity = quantity;
+    },
   },
 });
 
-export const { addToCart } = cartSLice.actions;
+export const { addToCart, removeFromCart, decreaseCart, clearCart, getTotals } =
+  cartSLice.actions;
 
 export default cartSLice.reducer;
