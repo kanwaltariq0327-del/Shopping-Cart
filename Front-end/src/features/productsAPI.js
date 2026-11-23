@@ -4,7 +4,7 @@ export const productsApi = createApi({
     reducerPath: "productsApi",
 
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://localhost:3000/"
+        baseUrl: "https://shopping-cart-q6ef.vercel.app/"
     }),
 
     endpoints: (builder) => ({
